@@ -1,6 +1,6 @@
 # 🖥️ Joor OS
 
-**Joor OS** is a minimal, educational 32-bit operating system built from scratch using **C** and **Assembly**. It features a simple terminal interface with basic file management commands and runs on x86 architecture via QEMU, CD/DVD, or USB.
+**Joor OS** is a minimal, educational 32-bit operating system built from scratch using **C** and **Assembly**. It features a simple terminal interface with basic file management commands and runs on x86 architecture via QEMU.
 
 ---
 
@@ -32,53 +32,46 @@ Make sure you have the following tools installed:
 - `ld`
 - `make`
 - `qemu-system-x86`
-- `xorriso` or `grub-mkrescue` (for ISO creation)
 
 **For Arch Linux:**
 
 ```bash
-sudo pacman -S gcc nasm make qemu xorriso
+sudo pacman -S gcc nasm make qemu
+```
 
-For Ubuntu/Debian:
-bash
+**For Ubuntu/Debian:**
 
-sudo apt install gcc nasm make qemu-system-x86 xorriso
+```bash
+sudo apt install gcc nasm make qemu-system-x86
+```
 
-Build ISO
+### Build the Kernel
 
-Clone the repository and build the ISO image:
-bash
+Clone the repository and build the kernel:
 
-git clone https://github.com/yourusername/joor-os.git
+```bash
+git clone https://github.com/pin-toto/joor-os.git
 cd joor-os
-make iso
+make
+```
 
-This will generate os.iso in the project root.
-Run with QEMU
-bash
+### Run with QEMU
 
+```bash
 make run
+```
 
 Or manually:
-bash
 
-qemu-system-i386 -cdrom os.iso -vga std -m 32
+```bash
+qemu-system-i386 -kernel build/kernel.elf -vga std -m 32
+```
 
-Boot on Real Hardware
+---
 
-    Write the ISO to a USB drive using dd (be careful!):
+## 📁 Project Structure
 
-bash
-
-sudo dd if=os.iso of=/dev/sdX bs=4M status=progress
-
-    Insert the USB drive and boot from it (enable legacy/BIOS boot mode).
-
-    Or burn the ISO to a CD/DVD and boot from it.
-
-📁 Project Structure
-text
-
+```
 joor/
 ├── boot/
 │   └── grub/
@@ -97,18 +90,35 @@ joor/
 ├── linker.ld                 # Linker script
 ├── Makefile                  # Build automation
 └── README.md
+```
 
-📜 License
+---
 
-This project is released under the Unlicense License. See the LICENSE file for more details.
-🤝 Contributing
+## 📜 License
+
+This project is released under the **Unlicense**. See the `LICENSE` file for more details.
+
+---
+
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
-🙏 Credits
 
-Built with ❤️ and Assembly + C by pintoto.
+---
+
+## 🙏 Credits
+
+Built with ❤️ and Assembly + C by **pintoto**.
 
 Special thanks to the OSDev community and GRUB for making this possible.
-📬 Contact
 
-    GitHub: @pin-toto
+---
+
+## 📬 Contact
+
+- GitHub: [@pin-toto](https://github.com/pin-toto)
+
+---
+
+> **Joor OS – Simple. Minimal. Yours.**
+```
