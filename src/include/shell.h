@@ -20,7 +20,6 @@ typedef struct {
 void shell_init(void);
 void shell_run(void);
 
-// دستورات (همگی با همین فرمت)
 void cmd_help(void);
 void cmd_echo(char* text);
 void cmd_info(void);
@@ -30,7 +29,6 @@ void cmd_clear(void);
 void cmd_reboot(void);
 void cmd_off(void);
 
-// سیستم فایل
 void fs_init(void);
 void fs_list(void);
 void fs_delete(const char* name);
