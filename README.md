@@ -50,8 +50,8 @@ sudo apt install gcc nasm make qemu-system-x86
 Clone the repository and build the kernel:
 
 ```bash
-git clone https://github.com/pin-toto/joor-os.git
-cd joor-os
+git clone https://github.com/pin-toto/joor.git
+cd joor
 make
 ```
 
