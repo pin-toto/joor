@@ -3,13 +3,12 @@
 static char command_buffer[MAX_COMMAND_LENGTH];
 static int buffer_index = 0;
 
-// ======== سیستم فایل ========
 static file_t files[MAX_FILES];
 static int file_count = 0;
 
 void fs_init(void) {
     file_count = 0;
-    // ایجاد فایل تست
+
     char* content = "This is a test file for Joor OS";
     int i = 0;
     while (content[i] && i < MAX_FILE_SIZE - 1) {
@@ -44,7 +43,6 @@ void fs_list(void) {
 
 void fs_delete(const char* name) {
     for (int i = 0; i < file_count; i++) {
-        // مقایسه ساده با حلقه
         int match = 1;
         int j = 0;
         while (name[j] && files[i].name[j]) {
@@ -83,7 +81,6 @@ void fs_delete(const char* name) {
     print("\n");
 }
 
-// ======== دستورات ========
 void cmd_help(void) {
     print("\nCommands:\n");
     print("  help    - Show this help\n");
