@@ -6,7 +6,6 @@ static int file_count = 0;
 
 void fs_init(void) {
     file_count = 0;
-    // ایجاد فایل تست
     char* content = "This is a test file for Joor OS";
     int i = 0;
     while (content[i] && i < MAX_FILE_SIZE - 1) {
@@ -98,9 +97,7 @@ void fs_read_file(const char* name, char* buffer) {
     buffer[0] = '\0';
 }
 
-// ======== تابع جدید برای نوشتن فایل ========
 void fs_write_file(const char* name, char* data, int size) {
-    // بررسی اینکه فایل از قبل وجود داره یا نه
     for (int i = 0; i < file_count; i++) {
         int match = 1;
         int j = 0;
@@ -112,7 +109,6 @@ void fs_write_file(const char* name, char* data, int size) {
             j++;
         }
         if (match && name[j] == '\0' && files[i].name[j] == '\0') {
-            // فایل وجود داره، بروزش کن
             int k = 0;
             while (data[k] && k < MAX_FILE_SIZE - 1) {
                 files[i].data[k] = data[k];
@@ -124,7 +120,6 @@ void fs_write_file(const char* name, char* data, int size) {
         }
     }
     
-    // فایل جدید
     if (file_count < MAX_FILES) {
         int i = 0;
         while (name[i] && i < MAX_FILENAME - 1) {

@@ -19,7 +19,7 @@ typedef struct {
 
 void shell_init(void);
 void shell_run(void);
-void terminal_readline(char* buffer, int maxlen);  // اضافه کن!
+void terminal_readline(char* buffer, int maxlen);  
 void cmd_edit(char* filename);
 
 void fs_init(void);

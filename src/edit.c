@@ -1,4 +1,4 @@
-#include "include/shell.h"  // این باید باشه!
+#include "include/shell.h"  
 #include "include/fs.h"
 #include "include/string.h"
 
@@ -19,7 +19,6 @@ void cmd_edit(char* filename) {
     print("\n");
     print("(Type ':wq' to save, ':q!' to quit)\n");
     
-    // بارگذاری محتوای قبلی
     char content[4096] = {0};
     fs_read_file(filename, content);
     
@@ -38,7 +37,6 @@ void cmd_edit(char* filename) {
         }
     }
     
-    // نمایش محتوای فعلی
     print("Current content:\n");
     for (int i = 0; i < line_count; i++) {
         print(editor_buffer[i]);
@@ -50,8 +48,8 @@ void cmd_edit(char* filename) {
     
     while (1) {
         print("> ");
-        terminal_readline(line_input, MAX_LINE_LEN);  // از shell.h میاد
-        
+        terminal_readline(line_input, MAX_LINE_LEN); 
+      
         if (strcmp(line_input, ":wq") == 0) {
             char new_content[4096] = {0};
             int pos = 0;

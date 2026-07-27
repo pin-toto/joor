@@ -5,7 +5,6 @@ static char command_buffer[MAX_COMMAND_LENGTH];
 static int buffer_index = 0;
 int show_welcome = 1;
 
-// ======== تاریخچه دستورات ========
 #define MAX_HISTORY 10
 static char history[MAX_HISTORY][MAX_COMMAND_LENGTH];
 static int history_count = 0;
@@ -26,7 +25,6 @@ void add_to_history(const char* cmd) {
     history_pos = history_count;
 }
 
-// ======== تابع اصلی خواندن خط (فقط با تاریخچه) ========
 void terminal_readline(char* buffer, int maxlen) {
     int i = 0;
     buffer[0] = '\0';
@@ -37,9 +35,9 @@ void terminal_readline(char* buffer, int maxlen) {
         if (c == 0) {
             uint8_t sc = inb(KEYBOARD_DATA_PORT);
             
-            if (sc == 0x48) {  // فلش بالا
+            if (sc == 0x48) {  
                 if (history_pos > 0) {
-                    // پاک کردن خط فعلی
+
                     while (i > 0) {
                         screen_putchar('\b', WHITE_ON_BLACK);
                         i--;
@@ -50,7 +48,7 @@ void terminal_readline(char* buffer, int maxlen) {
                     print(buffer);
                 }
                 continue;
-            } else if (sc == 0x50) {  // فلش پایین
+            } else if (sc == 0x50) {   
                 if (history_pos < history_count - 1) {
                     while (i > 0) {
                         screen_putchar('\b', WHITE_ON_BLACK);
@@ -93,7 +91,6 @@ void terminal_readline(char* buffer, int maxlen) {
     }
 }
 
-// ======== دستورات ========
 void cmd_help(void) {
     print("\nCommands:\n");
     print("  help    - Show this help\n");
@@ -176,7 +173,6 @@ void cmd_off(void) {
     }
 }
 
-// ======== شل ========
 void shell_init(void) {
     screen_clear();
     fs_init();
@@ -200,7 +196,6 @@ void shell_run(void) {
             add_to_history(command_buffer);
         }
         
-        // ======== پردازش دستورات ========
         if (strcmp(command_buffer, "help") == 0) {
             cmd_help();
         } else if (strcmp(command_buffer, "ls") == 0) {

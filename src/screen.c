@@ -5,7 +5,6 @@ static uint16_t cursor_pos = 0;
 static uint8_t default_color = WHITE_ON_BLACK;
 static int scroll_offset = 0;
 
-// بافر برای اسکرول (ذخیره خطوط)
 static char scrollback[SCROLLBACK_LINES][SCREEN_COLS + 1];
 static int scrollback_count = 0;
 static int scrollback_index = 0;
@@ -45,7 +44,6 @@ void screen_print(const char* str) {
 }
 
 void screen_print_color(const char* str, uint8_t color) {
-    // ذخیره خط در بافر اسکرول
     screen_save_line(str);
     
     while (*str) {
@@ -84,7 +82,6 @@ void screen_scroll(void) {
     cursor_pos = (SCREEN_ROWS - 1) * SCREEN_COLS;
 }
 
-// ذخیره خط در بافر اسکرول
 void screen_save_line(const char* line) {
     int i = 0;
     while (line[i] && i < SCREEN_COLS - 1) {
@@ -96,7 +93,6 @@ void screen_save_line(const char* line) {
     if (scrollback_count < SCROLLBACK_LINES) scrollback_count++;
 }
 
-// بازرسم صفحه با توجه به scroll_offset
 void redraw_screen(void) {
     screen_clear();
     int start = (scrollback_index - scrollback_count + scroll_offset) % SCROLLBACK_LINES;
@@ -110,7 +106,6 @@ void redraw_screen(void) {
     }
 }
 
-// اسکرول به بالا (نمایش خطوط قدیمی‌تر)
 void screen_scroll_up(int lines) {
     if (scroll_offset + lines < scrollback_count) {
         scroll_offset += lines;
@@ -118,7 +113,6 @@ void screen_scroll_up(int lines) {
     }
 }
 
-// اسکرول به پایین (نمایش خطوط جدیدتر)
 void screen_scroll_down(int lines) {
     if (scroll_offset >= lines) {
         scroll_offset -= lines;
