@@ -50,5 +50,8 @@ int strcmp(const char* s1, const char* s2);
 void screen_print_dec(uint32_t num);
 void* memcpy(void* dest, const void* src, int n);
 void* memset(void* dest, int c, int n);
+uint8_t cmos_read(uint8_t reg);
+uint8_t bcd_to_bin(uint8_t bcd);
+void cmd_date(void);
 
 #endif
