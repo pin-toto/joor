@@ -3,17 +3,23 @@
 static uint16_t* vga_buffer = (uint16_t*)VGA_ADDRESS;
 static uint16_t cursor_pos = 0;
 static uint8_t default_color = WHITE_ON_BLACK;
+static int scroll_offset = 0;
+
+static char scrollback[SCROLLBACK_LINES][SCREEN_COLS + 1];
+static int scrollback_count = 0;
+static int scrollback_index = 0;
 
 void screen_init(void) {
     screen_clear();
     screen_set_cursor(0);
+    scroll_offset = 0;
 }
 
 void screen_putchar(char c, uint8_t color) {
     if (c == '\n') {
-        cursor_pos = (cursor_pos / MAX_COLS + 1) * MAX_COLS;
+        cursor_pos = (cursor_pos / SCREEN_COLS + 1) * SCREEN_COLS;
     } else if (c == '\r') {
-        cursor_pos = (cursor_pos / MAX_COLS) * MAX_COLS;
+        cursor_pos = (cursor_pos / SCREEN_COLS) * SCREEN_COLS;
     } else if (c == '\t') {
         cursor_pos = (cursor_pos + 4) & ~3;
     } else if (c == '\b') {
@@ -26,7 +32,7 @@ void screen_putchar(char c, uint8_t color) {
         cursor_pos++;
     }
     
-    if (cursor_pos >= MAX_ROWS * MAX_COLS) {
+    if (cursor_pos >= SCREEN_ROWS * SCREEN_COLS) {
         screen_scroll();
     }
     
@@ -38,16 +44,19 @@ void screen_print(const char* str) {
 }
 
 void screen_print_color(const char* str, uint8_t color) {
+    screen_save_line(str);
+    
     while (*str) {
         screen_putchar(*str++, color);
     }
 }
 
 void screen_clear(void) {
-    for (int i = 0; i < MAX_ROWS * MAX_COLS; i++) {
+    for (int i = 0; i < SCREEN_ROWS * SCREEN_COLS; i++) {
         vga_buffer[i] = (default_color << 8) | ' ';
     }
     cursor_pos = 0;
+    scroll_offset = 0;
     screen_set_cursor(0);
 }
 
@@ -64,11 +73,49 @@ uint16_t screen_get_cursor(void) {
 }
 
 void screen_scroll(void) {
-    for (int i = 0; i < (MAX_ROWS - 1) * MAX_COLS; i++) {
-        vga_buffer[i] = vga_buffer[i + MAX_COLS];
+    for (int i = 0; i < (SCREEN_ROWS - 1) * SCREEN_COLS; i++) {
+        vga_buffer[i] = vga_buffer[i + SCREEN_COLS];
     }
-    for (int i = (MAX_ROWS - 1) * MAX_COLS; i < MAX_ROWS * MAX_COLS; i++) {
+    for (int i = (SCREEN_ROWS - 1) * SCREEN_COLS; i < SCREEN_ROWS * SCREEN_COLS; i++) {
         vga_buffer[i] = (default_color << 8) | ' ';
     }
-    cursor_pos = (MAX_ROWS - 1) * MAX_COLS;
+    cursor_pos = (SCREEN_ROWS - 1) * SCREEN_COLS;
+}
+
+void screen_save_line(const char* line) {
+    int i = 0;
+    while (line[i] && i < SCREEN_COLS - 1) {
+        scrollback[scrollback_index][i] = line[i];
+        i++;
+    }
+    scrollback[scrollback_index][i] = '\0';
+    scrollback_index = (scrollback_index + 1) % SCROLLBACK_LINES;
+    if (scrollback_count < SCROLLBACK_LINES) scrollback_count++;
+}
+
+void redraw_screen(void) {
+    screen_clear();
+    int start = (scrollback_index - scrollback_count + scroll_offset) % SCROLLBACK_LINES;
+    if (start < 0) start += SCROLLBACK_LINES;
+    
+    for (int i = 0; i < SCREEN_ROWS - 1; i++) {
+        int idx = (start + i) % SCROLLBACK_LINES;
+        if (i < scrollback_count - scroll_offset) {
+            screen_print(scrollback[idx]);
+        }
+    }
+}
+
+void screen_scroll_up(int lines) {
+    if (scroll_offset + lines < scrollback_count) {
+        scroll_offset += lines;
+        redraw_screen();
+    }
+}
+
+void screen_scroll_down(int lines) {
+    if (scroll_offset >= lines) {
+        scroll_offset -= lines;
+        redraw_screen();
+    }
 }
