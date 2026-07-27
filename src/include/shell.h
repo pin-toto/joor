@@ -19,19 +19,12 @@ typedef struct {
 
 void shell_init(void);
 void shell_run(void);
-
-void cmd_help(void);
-void cmd_echo(char* text);
-void cmd_info(void);
-void cmd_ls(void);
-void cmd_rm(char* filename);
-void cmd_clear(void);
-void cmd_reboot(void);
-void cmd_off(void);
+void terminal_readline(char* buffer, int maxlen);  
+void cmd_edit(char* filename);
 
 void fs_init(void);
 void fs_list(void);
 void fs_delete(const char* name);
-void fs_create(const char* name, const char* content);
+void fs_read_file(const char* name, char* buffer);
 
 #endif
