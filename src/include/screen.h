@@ -5,7 +5,7 @@
 
 #define SCREEN_ROWS 25
 #define SCREEN_COLS 80
-#define SCROLLBACK_LINES 1000  // تعداد خطوط ذخیره‌شده
+#define SCROLLBACK_LINES 1000  
 
 void screen_init(void);
 void screen_putchar(char c, uint8_t color);
