@@ -3,13 +3,6 @@
 #include "include/keyboard.h"
 #include "include/shell.h"
 
-int strcmp(const char* s1, const char* s2) {
-    while (*s1 && (*s1 == *s2)) {
-        s1++;
-        s2++;
-    }
-    return *(unsigned char*)s1 - *(unsigned char*)s2;
-}
 
 void* memcpy(void* dest, const void* src, int n) {
     char* d = (char*)dest;
@@ -84,4 +77,56 @@ void kernel_main(void) {
     while (1) {
         __asm__ volatile("hlt");
     }
+}
+
+uint8_t cmos_read(uint8_t reg) {
+    outb(0x70, reg);
+    return inb(0x71);
+}
+
+uint8_t bcd_to_bin(uint8_t bcd) {
+    return (bcd & 0x0F) + ((bcd >> 4) * 10);
+}
+
+void cmd_date() {
+    uint8_t minute, hour, day, month, year;
+    
+    minute = cmos_read(0x02);
+    hour = cmos_read(0x04);
+    day = cmos_read(0x07);
+    month = cmos_read(0x08);
+    year = cmos_read(0x09);
+    
+    minute = bcd_to_bin(minute);
+    hour = bcd_to_bin(hour);
+    day = bcd_to_bin(day);
+    month = bcd_to_bin(month);
+    year = bcd_to_bin(year);
+    
+    hour += 3;
+    minute += 30;
+    
+    if (minute >= 60) {
+        minute -= 60;
+        hour += 1;
+    }
+    if (hour >= 24) {
+        hour -= 24;
+    }
+    
+    print("Date: ");
+    print_dec(year + 2000);
+    print("-");
+    if (month < 10) print("0");
+    print_dec(month);
+    print("-");
+    if (day < 10) print("0");
+    print_dec(day);
+    print(" Time: ");
+    if (hour < 10) print("0");
+    print_dec(hour);
+    print(":");
+    if (minute < 10) print("0");
+    print_dec(minute);
+    print("\n");
 }
