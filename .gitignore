@@ -1,0 +1,17 @@
+# Build files
+kernel.bin
+os.iso
+build/
+iso/
+*.o
+*.elf
+
+# Temporary files
+*.swp
+*.swo
+*~
+kernel.bin
+os.iso
+*.iso
+build/
+iso/
