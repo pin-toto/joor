@@ -10,17 +10,13 @@
 #define KEY_BACKSPACE 0x0E
 #define KEY_ESC 0x01
 #define KEY_SHIFT 0x2A
-#define KEY_CTRL 0x1D
-#define KEY_ALT 0x38
-#define KEY_CAPS 0x3A
 #define KEY_UP 0x48
 #define KEY_DOWN 0x50
-#define KEY_LEFT 0x4B
-#define KEY_RIGHT 0x4D
+#define KEY_PAGEUP 0x49
+#define KEY_PAGEDOWN 0x51
 
 void keyboard_init(void);
 char keyboard_read_char(void);
 uint8_t keyboard_read_scancode(void);
-int keyboard_key_pressed(void);
 
 #endif
