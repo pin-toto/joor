@@ -7,17 +7,21 @@
 ## ✨ Features
 
 - 🚀 **Fast boot** – boots directly into the terminal
-- ⌨️ **Keyboard support** – full terminal input
+- ⌨️ **Keyboard support** – full terminal input with history (up/down arrows)
 - 📁 **Simple file system** – in-memory file storage
+- 📝 **Built-in text editor** – `edit` command for creating and modifying files
 - 📋 **Commands**:
   - `help` – show available commands
   - `ls` – list files
   - `rm <file>` – delete a file
+  - `cat <file>` – display file content
   - `cout <text>` – print text to the screen
-  - `clear` – clear the terminal screen
+  - `clear` / `cls` – clear the terminal screen
   - `info` – display system information
   - `reboot` – restart the system
   - `off` – shutdown the system
+  - `edit <file>` – edit a text file
+  - `show_welcome:on/off` – toggle welcome message
 
 ---
 
@@ -45,7 +49,7 @@ sudo pacman -S gcc nasm make qemu
 sudo apt install gcc nasm make qemu-system-x86
 ```
 
-### Build the Kernel
+### Build and Run
 
 Clone the repository and build the kernel:
 
@@ -53,18 +57,13 @@ Clone the repository and build the kernel:
 git clone https://github.com/pin-toto/joor.git
 cd joor
 make
-```
-
-### Run with QEMU
-
-```bash
 make run
 ```
 
 Or manually:
 
 ```bash
-qemu-system-i386 -kernel build/kernel.elf -vga std -m 32
+qemu-system-i386 -cdrom os.iso -vga std -m 32
 ```
 
 ---
@@ -81,12 +80,16 @@ joor/
 │   │   ├── kernel.h
 │   │   ├── keyboard.h
 │   │   ├── screen.h
-│   │   └── shell.h
+│   │   ├── shell.h
+│   │   └── string.h
 │   ├── boot.asm              # Multiboot entry point
 │   ├── kernel.c              # Main kernel
 │   ├── keyboard.c            # PS/2 keyboard driver
 │   ├── screen.c              # VGA text mode driver
-│   └── shell.c               # Simple command-line shell
+│   ├── shell.c               # Command-line shell
+│   ├── edit.c                # Text editor
+│   ├── fs.c                  # File system
+│   └── string.c              # String utilities
 ├── linker.ld                 # Linker script
 ├── Makefile                  # Build automation
 └── README.md
