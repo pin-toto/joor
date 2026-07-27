@@ -26,19 +26,31 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | directories
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm | directories
 	$(ASM) -f elf32 $< -o $@
 
-kernel.bin: $(C_OBJECTS) $(ASM_OBJECTS)
+kernel.elf: $(C_OBJECTS) $(ASM_OBJECTS)
 	$(LD) $(LDFLAGS) -o $(BUILD_DIR)/kernel.elf $^
+
+kernel.bin: kernel.elf
 	objcopy -O binary $(BUILD_DIR)/kernel.elf $@
-	@echo "✅ Kernel built: kernel.bin"
 
 clean:
-	rm -rf $(BUILD_DIR) kernel.bin
+	rm -rf $(BUILD_DIR) kernel.bin os.iso iso
 	@echo "🧹 Cleaned"
 
-run: all
+# ======== ISO با grub-mkrescue (همیشه کار میکنه) ========
+iso: kernel.elf
+	mkdir -p iso/boot/grub
+	cp $(BUILD_DIR)/kernel.elf iso/boot/kernel.elf
+	cp boot/grub/grub.cfg iso/boot/grub/
+	@echo "📀 Creating ISO with grub-mkrescue..."
+	grub-mkrescue -o os.iso iso 2>/dev/null || true
+	@echo "✅ ISO created: os.iso"
+	@echo "📦 Size:"
+	@du -h os.iso
+
+run: iso
+	qemu-system-i386 -cdrom os.iso -vga std -m 32 -no-reboot
+
+run-elf: kernel.elf
 	qemu-system-i386 -kernel $(BUILD_DIR)/kernel.elf -vga std -m 32 -no-reboot
 
-debug: all
-	qemu-system-i386 -s -S -kernel $(BUILD_DIR)/kernel.elf -vga std -m 32 &
-
-.PHONY: all clean run debug directories
+.PHONY: all clean iso run run-elf directories
