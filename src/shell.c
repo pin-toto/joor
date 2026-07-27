@@ -126,7 +126,7 @@ void cmd_off(void) {
     while (1) __asm__ volatile("hlt");
 }
 
-// ======== شل ========
+
 void shell_init(void) {
     screen_clear();
     fs_init();
@@ -165,7 +165,7 @@ void shell_run(void) {
             }
         }
         
-        // ======== پردازش دستورات ========
+        
         if (strcmp(command_buffer, "help") == 0) {
             cmd_help();
         } else if (strcmp(command_buffer, "ls") == 0) {
